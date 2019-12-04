@@ -11,6 +11,7 @@
 #include "winnt.h"
 #include "winbase.h"
 #include <algorithm>
+#include <bits/stdc++.h>
 
 namespace patch
 {
@@ -110,6 +111,8 @@ class AvlTree
         void DestroyRecursive(AVLNode<T> *);
         int getNumberOfRotations();
         void clearNumRotations();
+        bool checkAVLG(AVLNode<T> *);
+        bool isBalanced();
         ~AvlTree<T>();
 };
 
@@ -524,6 +527,23 @@ int AvlTree<T>::getNumberOfRotations() {
 }
 
 template <class T>
+bool AvlTree<T>::checkAVLG(AVLNode<T> *node) {
+
+    if(node == NULL)
+        return true;
+
+    if(getBalance(node) > maxImbalance || getBalance(node) < -1 * maxImbalance)
+        return false;
+
+    return checkAVLG(node->left) && checkAVLG(node->right);
+}
+
+template <class T>
+bool AvlTree<T>::isBalanced() {
+    return checkAVLG(root);
+}
+
+template <class T>
 AvlTree<T>::~AvlTree<T>() {
     DestroyRecursive(root);
 }
@@ -636,9 +656,12 @@ int main()
     StartCounter();
 
     int numberOfElements = 1000;
-    int data[numberOfElements];
-    srand(0);
 
+    /*int data[numberOfElements];
+
+
+    //replace...with hashset
+    //implement isAVLGBalanced()
     for(int i = 0; i < numberOfElements; i++) {
 
         bool uniqueData;
@@ -647,6 +670,8 @@ int main()
         do {
           uniqueData = true;
           newData = rand();
+
+          cout << newData << endl;
 
           for(int j = 0; j < i; j++) {
 
@@ -659,7 +684,29 @@ int main()
 
         data[i] = newData;
     }
+*/
 
+    unordered_set <int> dataSet;
+    for(int i = 0; i < numberOfElements; i++) {
+
+        int newData = rand();
+        cout<<"Inserting " << newData << " to set" << endl;
+        dataSet.insert(newData);
+    }
+
+    int data[dataSet.size()];
+    int index = 0;
+
+    cout<<"SIZE OF DATA ARRAY IS " << dataSet.size() << endl;
+
+    unordered_set<int> :: iterator itr;
+    for (itr = dataSet.begin(); itr != dataSet.end(); itr++) {
+        data[index] = (*itr);
+        cout<<"Data at index " << index << " is " << data[index] << endl;
+        index++;
+    }
+
+    cout<<"Finished creating data array.."<<endl;
 
     time_t t = time(0);   // get time now
     struct tm * now = localtime( & t );
@@ -670,44 +717,71 @@ int main()
     std::ofstream dataFile;
     dataFile.open(buffer);
 
+    int numberOfTrials = 15;
+
     if(dataFile.is_open()){
 
         for(int g = 1; g <= 20; g++) {
 
-            AvlTree<float> gTree(g, false);
-            double searchTime = 0;
-            double rotationTime = 0;
+            double total_num_rotations = 0;
+            double total_deletion_rotations = 0;
+            double total_search_time = 0;
+            double total_rotation_time = 0;
+            double total_deletion_search_time = 0;
+            double total_deletion_rotation_time = 0;
+            double total_elapsed = 0;
+            double total_delete_elapsed = 0;
 
-            double start = GetCounter();
-            for(int d = 0; d < numberOfElements; d++) {
-                gTree.insertData(data[d]);
-                searchTime += gTree.insertion_search_time;
-                rotationTime += gTree.insertion_rotation_time;
+            for(int t = 0; t < numberOfTrials; t++) {
+
+                random_shuffle(data, data+dataSet.size());
+
+                AvlTree<float> gTree(g, false);
+                double searchTime = 0;
+                double rotationTime = 0;
+
+                double start = GetCounter();
+                for(int d = 0; d < numberOfElements; d++) {
+                    gTree.insertData(data[d]);
+                    assert(gTree.isBalanced() == true);
+                    searchTime += gTree.insertion_search_time;
+                    rotationTime += gTree.insertion_rotation_time;
+                }
+                double end = GetCounter();
+                double elapsed = end - start;
+                cout <<"TIME TAKEN: " << elapsed << endl;
+                int numRotations = gTree.getNumberOfRotations();
+
+                gTree.clearNumRotations();
+
+                double deletion_searchTime = 0;
+                double deletion_rotationTime = 0;
+
+                double delete_start = GetCounter();
+                for(int d = numberOfElements - 1; d >= 0; d--) {
+                    gTree.deleteData(data[d]);
+                    deletion_searchTime += gTree.deletion_search_time;
+                    deletion_rotationTime += gTree.deletion_rotation_time;
+                }
+                double delete_end = GetCounter();
+                double delete_elapsed = end - start;
+                cout <<"TIME TAKEN FOR DELETION: " << delete_elapsed << endl;
+                int delete_numRotations = gTree.getNumberOfRotations();
+
+                total_num_rotations += numRotations;
+                total_deletion_rotations += delete_numRotations;
+                total_search_time += searchTime;
+                total_rotation_time += rotationTime;
+                total_deletion_search_time += deletion_searchTime;
+                total_deletion_rotation_time += deletion_rotationTime;
+                total_elapsed += elapsed;
+                total_delete_elapsed += delete_elapsed;
             }
-            double end = GetCounter();
-            double elapsed = end - start;
-            cout <<"TIME TAKEN: " << elapsed << endl;
-            int numRotations = gTree.getNumberOfRotations();
-
-            gTree.clearNumRotations();
-
-            double deletion_searchTime = 0;
-            double deletion_rotationTime = 0;
-
-            double delete_start = GetCounter();
-            for(int d = numberOfElements - 1; d >= 0; d--) {
-                gTree.deleteData(data[d]);
-                deletion_searchTime += gTree.deletion_search_time;
-                deletion_rotationTime += gTree.deletion_rotation_time;
-            }
-            double delete_end = GetCounter();
-            double delete_elapsed = end - start;
-            cout <<"TIME TAKEN FOR DELETION: " << delete_elapsed << endl;
-            int delete_numRotations = gTree.getNumberOfRotations();
-
             string dataEntry("");
-            dataEntry = dataEntry + patch::to_string(g) + "," + patch::to_string(numRotations) + "," + patch::to_string(elapsed) + "," + patch::to_string(searchTime) + "," + patch::to_string(rotationTime) +
-                                    "," + patch::to_string(delete_numRotations) + "," + patch::to_string(delete_elapsed) + "," + patch::to_string(deletion_searchTime) + "," + patch::to_string(deletion_rotationTime);
+            dataEntry = dataEntry + patch::to_string(g) + "," + patch::to_string(total_num_rotations/numberOfTrials) + "," + patch::to_string(total_elapsed/numberOfTrials) +
+                                    "," + patch::to_string(total_search_time/numberOfTrials) + "," + patch::to_string(total_rotation_time/numberOfTrials) +
+                                    "," + patch::to_string(total_deletion_rotations/numberOfTrials) + "," + patch::to_string(total_delete_elapsed/numberOfTrials) +
+                                    "," + patch::to_string(total_deletion_search_time/numberOfTrials) + "," + patch::to_string(total_deletion_rotation_time/numberOfTrials);
             cout<<dataEntry<<"\n";
             dataFile<<dataEntry<<"\n";
         }

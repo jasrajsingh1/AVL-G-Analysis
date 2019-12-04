@@ -22,12 +22,12 @@ for dataPoint in dataFile:
 
     data = dataPoint.split(",")
 
-    numRotations[int(data[0])] = int(data[1])
+    numRotations[int(data[0])] = float(data[1])
     timeRotations[int(data[0])] = float(data[2])
     insertionSearch[int(data[0])] = float(data[3])
     insertionRotation[int(data[0])] = float(data[4])
 
-    d_numRotations[int(data[0])] = int(data[5])
+    d_numRotations[int(data[0])] = float(data[5])
     d_timeRotations[int(data[0])] = float(data[6])
     dSearch[int(data[0])] = float(data[7])
     dRotation[int(data[0])] = float(data[8])
