@@ -550,141 +550,9 @@ AvlTree<T>::~AvlTree<T>() {
 
 int main()
 {
-
-    /*AvlTree<float> oneTree(1, false);
-
-    oneTree.insertData(25.12);
-    cout<<endl<<"Pre-Order: ";
-    oneTree.preOrder();
-    cout<<endl<<"In-Order: ";
-    oneTree.inOrder();
-    cout<<endl<<"Post-Order: ";
-    oneTree.postOrder();
-    cout<<endl;
-
-    oneTree.insertData(10.12);
-    cout<<endl<<"Pre-Order: ";
-    oneTree.preOrder();
-    cout<<endl<<"In-Order: ";
-    oneTree.inOrder();
-    cout<<endl<<"Post-Order: ";
-    oneTree.postOrder();
-    cout<<endl;
-
-    oneTree.insertData(8.12);
-    cout<<endl<<"Pre-Order: ";
-    oneTree.preOrder();
-    cout<<endl<<"In-Order: ";
-    oneTree.inOrder();
-    cout<<endl<<"Post-Order: ";
-    oneTree.postOrder();
-    cout<<endl;
-
-    oneTree.insertData(35.12);
-    cout<<endl<<"Pre-Order: ";
-    oneTree.preOrder();
-    cout<<endl<<"In-Order: ";
-    oneTree.inOrder();
-    cout<<endl<<"Post-Order: ";
-    oneTree.postOrder();
-    cout<<endl;
-
-    oneTree.insertData(30.12);
-    cout<<endl<<"Pre-Order: ";
-    oneTree.preOrder();
-    cout<<endl<<"In-Order: ";
-    oneTree.inOrder();
-    cout<<endl<<"Post-Order: ";
-    oneTree.postOrder();
-    cout<<endl;
-
-    oneTree.insertData(40.12);
-    cout<<endl<<"Pre-Order: ";
-    oneTree.preOrder();
-    cout<<endl<<"In-Order: ";
-    oneTree.inOrder();
-    cout<<endl<<"Post-Order: ";
-    oneTree.postOrder();
-    cout<<endl;*/
-
-    /*int numberOfElements = 10000;
-    int data[numberOfElements];
-    srand(0);
-
-    for(int i = 0; i < numberOfElements; i++) {
-
-        bool uniqueData;
-        int newData;
-
-        do {
-          uniqueData = true;
-          newData = rand();
-
-          for(int j = 0; j < i; j++) {
-
-             if(data[j] == newData) {
-                uniqueData = false;
-                break;
-             }
-          }
-        } while(!uniqueData);
-
-        data[i] = newData;
-    }
-
-     for(int g = 1; g <= 20; g++) {
-
-        AvlTree<int> gTree(g, false);
-
-        for(int d = 0; d < numberOfElements; d++) {
-            gTree.insertData(data[d]);
-        }
-
-        random_shuffle(data, data + numberOfElements);
-
-        for(int d = 0; d < numberOfElements; d++) {
-            gTree.deleteData(data[d]);
-
-            if(gTree.searchData(data[d]) != false){
-                exit(-1);
-            }
-        }
-
-     }
-     */
-
     StartCounter();
 
-    int numberOfElements = 1000;
-
-    /*int data[numberOfElements];
-
-
-    //replace...with hashset
-    //implement isAVLGBalanced()
-    for(int i = 0; i < numberOfElements; i++) {
-
-        bool uniqueData;
-        int newData;
-
-        do {
-          uniqueData = true;
-          newData = rand();
-
-          cout << newData << endl;
-
-          for(int j = 0; j < i; j++) {
-
-             if(data[j] == newData) {
-                uniqueData = false;
-                break;
-             }
-          }
-        } while(!uniqueData);
-
-        data[i] = newData;
-    }
-*/
+    int numberOfElements = 10000;
 
     unordered_set <int> dataSet;
     for(int i = 0; i < numberOfElements; i++) {
@@ -697,8 +565,6 @@ int main()
     int data[dataSet.size()];
     int index = 0;
 
-    cout<<"SIZE OF DATA ARRAY IS " << dataSet.size() << endl;
-
     unordered_set<int> :: iterator itr;
     for (itr = dataSet.begin(); itr != dataSet.end(); itr++) {
         data[index] = (*itr);
@@ -706,9 +572,7 @@ int main()
         index++;
     }
 
-    cout<<"Finished creating data array.."<<endl;
-
-    time_t t = time(0);   // get time now
+    time_t t = time(0);
     struct tm * now = localtime( & t );
 
     char buffer [80];
@@ -749,7 +613,7 @@ int main()
                 }
                 double end = GetCounter();
                 double elapsed = end - start;
-                cout <<"TIME TAKEN: " << elapsed << endl;
+
                 int numRotations = gTree.getNumberOfRotations();
 
                 gTree.clearNumRotations();
@@ -765,7 +629,7 @@ int main()
                 }
                 double delete_end = GetCounter();
                 double delete_elapsed = end - start;
-                cout <<"TIME TAKEN FOR DELETION: " << delete_elapsed << endl;
+
                 int delete_numRotations = gTree.getNumberOfRotations();
 
                 total_num_rotations += numRotations;

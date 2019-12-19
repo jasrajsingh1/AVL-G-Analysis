@@ -56,11 +56,11 @@ d_rotTime_x, d_rotTime_y = zip(*dRotationTime)
 dSearchTime = sorted(dSearch.items())
 d_searchTime_x, d_searchTime_y = zip(*dSearchTime)
 
-fig, axs = plt.subplots(4, 1, sharex='col', constrained_layout=True)
+fig, axs = plt.subplots(4, 1, constrained_layout=True)
 fig.suptitle('AVL-G Tree Performance for Insertions', fontsize=16)
 plt.xticks(np.arange(1, 21, 1)) 
 
-fig2, axs2 = plt.subplots(4, 1, sharex='col', constrained_layout=True)
+fig2, axs2 = plt.subplots(4, 1, constrained_layout=True)
 fig2.suptitle('AVL-G Tree Performance for Deletions', fontsize=16)
 plt.xticks(np.arange(1, 21, 1)) 
 
